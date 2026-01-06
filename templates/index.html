@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generador de Cartas</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 50px; }
+        .card { background: white; padding: 30px; border-radius: 12px; shadow: 0 4px 10px rgba(0,0,0,0.1); width: 400px; }
+        input { width: 100%; margin: 10px 0; padding: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>💌 Crear mi Carta</h2>
+        <form action="/generar" method="POST">
+            <label>Nombre:</label> <input type="text" name="nombre" required>
+            <label>Fecha:</label> <input type="date" name="fecha" required>
+            <label>Color de Fondo:</label> <input type="color" name="color_fondo" value="#ffffff">
+            <label>Color de Letra:</label> <input type="color" name="color_texto" value="#000000">
+            <button type="submit">Descargar Carta (PDF)</button>
+        </form>
+    </div>
+</body>
+</html>

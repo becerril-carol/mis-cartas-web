@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reconocimiento Especial</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: {{ fondo }}; 
+            font-family: 'Montserrat', sans-serif;
+            /* ESTA LÍNEA ES LA MÁGICA PARA EL COLOR EN PDF */
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .carta-container {
+            background-color: white;
+            width: 85%;
+            max-width: 550px;
+            padding: 50px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            text-align: center;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .decoracion {
+            font-size: 35px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .fecha {
+            font-size: 0.8rem;
+            color: #999;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
+
+        .texto-reconocimiento {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: {{ texto }}; 
+            font-size: 2.6rem;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .dedicatoria {
+            font-size: 1.1rem;
+            color: #444;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .frase-box {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: #444;
+            line-height: 1.5;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.02);
+            border-radius: 15px;
+            border-left: 4px solid {{ texto }};
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-weight: 600;
+            color: {{ texto }};
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        /* AJUSTE PARA QUE EL PDF SALGA CON COLOR */
+        @media print {
+            body {
+                background-color: {{ fondo }} !important;
+            }
+            .carta-container {
+                box-shadow: none;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="carta-container">
+        <span class="decoracion">✨</span>
+        <div class="fecha">{{ fecha }}</div>
+        
+        <p class="texto-reconocimiento">Se le otorga el presente reconocimiento a:</p>
+        <h1> {{ nombre }}</h1>
+        <p class="dedicatoria">por su gran esfuerzo y dedicación constante.</p>
+        
+        <div class="frase-box">
+            "{{ frase }}"
+        </div>
+
+        <div class="footer">
+            — Sigue brillando —
+        </div>
+    </div>
+
+</body>
+</html>

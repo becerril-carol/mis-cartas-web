@@ -2,110 +2,51 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reconocimiento Oficial</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
-
-        /* CONFIGURACIÓN SEGÚN EL ESTILO ELEGIDO */
-        {% if estilo == 'formal' %}
-            :root { --color-principal: #1a2a6c; --bg-grad: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d); }
-        {% elif estilo == 'moderno' %}
-            :root { --color-principal: #d4af37; --bg-grad: linear-gradient(135deg, #1d1d1d 0%, #434343 100%); }
-        {% else %}
-            :root { --color-principal: #333333; --bg-grad: #f8f9fa; }
-        {% endif %}
-
-        body {
-            margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
-            background: var(--bg-grad); 
-            font-family: 'Montserrat', sans-serif;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:ital@1&display=swap');
+        
+        body { 
+            margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; background-color: #f0f2f5; font-family: 'Montserrat', sans-serif;
         }
 
         .carta-container {
-            background-color: white;
-            width: 90%; max-width: 650px;
-            padding: 60px; border-radius: 5px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            text-align: center;
-            border-top: 15px solid var(--color-principal);
-            position: relative;
+            background-color: {{ fondo }}; 
+            color: {{ texto }};
+            width: 80%; max-width: 600px;
+            padding: 50px; text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            -webkit-print-color-adjust: exact;
+
+            /* Lógica de Estilos */
+            {% if estilo == 'formal' %}
+                border: 15px double {{ texto }};
+                border-radius: 0px;
+            {% elif estilo == 'moderno' %}
+                border: 3px solid {{ texto }};
+                border-radius: 40px;
+            {% else %}
+                border: none;
+                border-radius: 10px;
+            {% endif %}
         }
 
-        .header-empresa {
-            font-size: 0.9rem; font-weight: 600; letter-spacing: 4px;
-            color: #777; text-transform: uppercase; margin-bottom: 40px;
-        }
-
-        .fecha { font-size: 0.85rem; color: #666; margin-bottom: 20px; }
-
-        .titulo-reconocimiento {
-            font-family: 'Playfair Display', serif;
-            color: var(--color-principal);
-            font-size: 1.2rem; text-transform: uppercase;
-            letter-spacing: 2px; margin-bottom: 30px;
-        }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            color: #222; font-size: 3rem; margin: 10px 0;
-        }
-
-        .puesto {
-            font-size: 1.2rem; color: var(--color-principal);
-            font-weight: 600; margin-bottom: 30px; font-style: italic;
-        }
-
-        .motivo-texto {
-            font-size: 1.1rem; color: #444; line-height: 1.6;
-            margin: 20px auto; max-width: 80%;
-        }
-
-        .frase-box {
-            font-family: 'Playfair Display', serif; font-style: italic;
-            font-size: 1.3rem; color: #555;
-            margin: 40px 0; padding: 25px;
-            background: #fdfdfd; border: 1px solid #eee;
-            border-left: 5px solid var(--color-principal);
-        }
-
-        .firma-linea {
-            margin-top: 60px; border-top: 1px solid #ccc;
-            width: 200px; margin-left: auto; margin-right: auto;
-            padding-top: 10px; font-size: 0.8rem;
-            font-weight: bold; color: #333; text-transform: uppercase;
-        }
-
-        @media print {
-            body { background: none !important; }
-            .carta-container { box-shadow: none; border: 2px solid #eee; }
-        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin: 10px 0; color: {{ texto }}; }
+        .puesto { font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; opacity: 0.8; }
+        .motivo { line-height: 1.6; margin: 20px 0; font-size: 1.1rem; }
+        .frase-box { font-style: italic; padding: 20px; border-top: 1px solid {{ texto }}; border-bottom: 1px solid {{ texto }}; margin: 30px 0; }
+        .firma { margin-top: 50px; font-weight: bold; border-top: 1px solid {{ texto }}; display: inline-block; padding-top: 10px; width: 200px; }
     </style>
 </head>
 <body>
-
     <div class="carta-container">
-        <div class="header-empresa">Diploma de Excelencia Laboral</div>
-        <div class="fecha">Expedido el {{ fecha }}</div>
-        
-        <div class="titulo-reconocimiento">Se otorga con orgullo a:</div>
+        <div style="font-size: 0.8rem; letter-spacing: 3px;">RECONOCIMIENTO OFICIAL</div>
+        <p>Otorgado a:</p>
         <h1>{{ nombre }}</h1>
         <div class="puesto">{{ puesto }}</div>
-        
-        <div class="motivo-texto">
-            {{ motivo }}
-        </div>
-        
-        <div class="frase-box">
-            "{{ frase }}"
-        </div>
-
-        <div class="firma-linea">
-            Dirección General<br>
-            <small>{{ empresa }}</small>
-        </div>
+        <div class="motivo">{{ motivo }}</div>
+        <div class="frase-box">"{{ frase }}"</div>
+        <div class="firma">DIRECCIÓN GENERAL<br><small>{{ empresa }}</small></div>
     </div>
-
 </body>
 </html>

@@ -1,23 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Generador de Cartas</title>
+    <meta charset="UTF-8">
+    <title>Sistema de Reconocimiento Laboral</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 50px; }
-        .card { background: white; padding: 30px; border-radius: 12px; shadow: 0 4px 10px rgba(0,0,0,0.1); width: 400px; }
-        input { width: 100%; margin: 10px 0; padding: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e9ecef; display: flex; justify-content: center; padding: 40px; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 450px; }
+        h2 { color: #333; text-align: center; margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-top: 15px; color: #555; }
+        input, select, textarea { width: 100%; margin-top: 5px; padding: 10px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 8px; }
+        textarea { height: 80px; resize: none; }
+        .btn-submit { width: 100%; padding: 12px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 20px; transition: 0.3s; }
+        .btn-submit:hover { background: #218838; }
+        .frase-box { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 5px solid #007bff; }
+        .btn-frase { background: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; float: right; }
     </style>
 </head>
 <body>
     <div class="card">
-        <h2>💌 Crear mi Carta</h2>
+        <h2>🏆 Reconocimiento Laboral</h2>
         <form action="/generar" method="POST">
-            <label>Nombre:</label> <input type="text" name="nombre" required>
-            <label>Fecha:</label> <input type="date" name="fecha" required>
-            <label>Color de Fondo:</label> <input type="color" name="color_fondo" value="#ffffff">
-            <label>Color de Letra:</label> <input type="color" name="color_texto" value="#000000">
-            <button type="submit">Descargar Carta (PDF)</button>
+            <label>Nombre del Empleado:</label> 
+            <input type="text" name="nombre" placeholder="Ej. Juan Pérez" required>
+            
+            <label>Puesto:</label> 
+            <input type="text" name="puesto" placeholder="Ej. Gerente de Ventas" required>
+            
+            <label>Motivo del Reconocimiento:</label> 
+            <textarea name="motivo" placeholder="Ej. Por su excelente desempeño en el trimestre..." required></textarea>
+            
+            <label>Fecha:</label> 
+            <input type="date" name="fecha" required>
+
+            <label>Estilo de Carta:</label>
+            <select name="estilo">
+                <option value="formal">Clásico Formal (Azul)</option>
+                <option value="moderno">Moderno (Dorado)</option>
+                <option value="minimalista">Minimalista Limpio</option>
+            </select>
+
+            <div class="frase-box">
+                <button type="button" class="btn-frase" onclick="location.reload()">🔄 Cambiar Frase</button>
+                <small><strong>Frase Motivacional:</strong></small>
+                <p id="preview-frase" style="font-style: italic; font-size: 14px; margin-top: 5px;">Se seleccionará una frase aleatoria de tu libro de frases.</p>
+            </div>
+
+            <input type="hidden" name="color_fondo" value="#ffffff">
+            <input type="hidden" name="color_texto" value="#000000">
+            
+            <button type="submit" class="btn-submit">Generar Reconocimiento Oficial</button>
         </form>
     </div>
 </body>

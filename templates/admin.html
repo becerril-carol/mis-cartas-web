@@ -2,51 +2,66 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Administración</title>
+    <title>Panel de Administración - Recursos Humanos</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
         body { font-family: 'Montserrat', sans-serif; background-color: #f8f9fa; padding: 40px; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        h1 { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .btn-volver { font-size: 0.8rem; background: #007bff; color: white; text-decoration: none; padding: 8px 15px; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { text-align: left; padding: 15px; background: #f1f3f5; font-size: 0.8rem; }
-        td { padding: 15px; border-bottom: 1px solid #eee; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        h1 { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; color: #333; }
+        
+        /* Estilo del Contador */
+        .stats-bar { background: #e9ecef; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .counter-badge { background: #28a745; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
+        
+        .btn-volver { font-size: 0.8rem; background: #007bff; color: white; text-decoration: none; padding: 8px 15px; border-radius: 8px; transition: 0.3s; }
+        .btn-volver:hover { background: #0056b3; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 15px; background: #343a40; color: white; font-size: 0.85rem; text-transform: uppercase; }
+        td { padding: 15px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        
+        .puesto-tag { font-size: 0.75rem; color: #666; display: block; font-style: italic; }
         .link-ver { color: #007bff; text-decoration: none; font-weight: 600; }
-        .link-ver:hover { text-decoration: underline; }
-        .btn-eliminar { color: #d63031; text-decoration: none; font-size: 0.9rem; margin-left: 10px; }
+        .btn-eliminar { color: #d63031; text-decoration: none; font-weight: bold; padding: 5px; }
+        
+        tr:hover { background-color: #fcfcfc; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1> Mis Registros 📜 <a href="/" class="btn-volver">Ir al Inicio</a> </h1>
+    <h1> Panel de Control 📊 <a href="/" class="btn-volver">Regresar al Generador</a> </h1>
+    
+    <div class="stats-bar">
+        <span>Total de reconocimientos generados:</span>
+        <span class="counter-badge">{{ total }}</span>
+    </div>
+
     <table>
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nombre (Clic para ver)</th>
+                <th>Empleado y Puesto</th>
                 <th>Fecha</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for carta in cartas %}
+            {% for registro in registros %}
             <tr>
-                <td>#{{ carta.id }}</td>
+                <td>#{{ registro.id }}</td>
                 <td>
-                    <a href="/ver/{{ carta.id }}" target="_blank" class="link-ver">
-                        {{ carta.nombre }} 👁️
-                    </a>
+                    <strong>{{ registro.nombre }}</strong>
+                    <span class="puesto-tag">{{ registro.puesto }}</span>
                 </td>
-                <td>{{ carta.fecha }}</td>
+                <td>{{ registro.fecha }}</td>
                 <td>
-                    <a href="/eliminar/{{ carta.id }}" class="btn-eliminar" onclick="return confirm('¿Borrar registro?')">
-                        Eliminar 🗑️
+                    <a href="/eliminar/{{ registro.id }}" class="btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar este registro?')">
+                        🗑️ Borrar
                     </a>
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="4" style="text-align:center;">No hay registros.</td></tr>
+            <tr><td colspan="4" style="text-align:center; padding: 40px;">No se han generado reconocimientos aún.</td></tr>
             {% endfor %}
         </tbody>
     </table>

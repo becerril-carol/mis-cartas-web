@@ -2,122 +2,108 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reconocimiento Especial</title>
+    <title>Reconocimiento Oficial</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
 
+        /* CONFIGURACIÓN SEGÚN EL ESTILO ELEGIDO */
+        {% if estilo == 'formal' %}
+            :root { --color-principal: #1a2a6c; --bg-grad: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d); }
+        {% elif estilo == 'moderno' %}
+            :root { --color-principal: #d4af37; --bg-grad: linear-gradient(135deg, #1d1d1d 0%, #434343 100%); }
+        {% else %}
+            :root { --color-principal: #333333; --bg-grad: #f8f9fa; }
+        {% endif %}
+
         body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: {{ fondo }}; 
+            margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            background: var(--bg-grad); 
             font-family: 'Montserrat', sans-serif;
-            /* ESTA LÍNEA ES LA MÁGICA PARA EL COLOR EN PDF */
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
 
         .carta-container {
             background-color: white;
-            width: 85%;
-            max-width: 550px;
-            padding: 50px 40px;
-            border-radius: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            width: 90%; max-width: 650px;
+            padding: 60px; border-radius: 5px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             text-align: center;
+            border-top: 15px solid var(--color-principal);
             position: relative;
-            border: 1px solid rgba(255,255,255,0.3);
         }
 
-        .decoracion {
-            font-size: 35px;
-            margin-bottom: 15px;
-            display: block;
+        .header-empresa {
+            font-size: 0.9rem; font-weight: 600; letter-spacing: 4px;
+            color: #777; text-transform: uppercase; margin-bottom: 40px;
         }
 
-        .fecha {
-            font-size: 0.8rem;
-            color: #999;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 25px;
-        }
+        .fecha { font-size: 0.85rem; color: #666; margin-bottom: 20px; }
 
-        .texto-reconocimiento {
-            font-size: 1.1rem;
-            color: #555;
-            margin-bottom: 10px;
-            font-weight: 300;
+        .titulo-reconocimiento {
+            font-family: 'Playfair Display', serif;
+            color: var(--color-principal);
+            font-size: 1.2rem; text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 30px;
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            color: {{ texto }}; 
-            font-size: 2.6rem;
-            margin: 0;
-            line-height: 1.2;
+            color: #222; font-size: 3rem; margin: 10px 0;
         }
 
-        .dedicatoria {
-            font-size: 1.1rem;
-            color: #444;
-            margin-top: 15px;
-            font-weight: 600;
+        .puesto {
+            font-size: 1.2rem; color: var(--color-principal);
+            font-weight: 600; margin-bottom: 30px; font-style: italic;
+        }
+
+        .motivo-texto {
+            font-size: 1.1rem; color: #444; line-height: 1.6;
+            margin: 20px auto; max-width: 80%;
         }
 
         .frase-box {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 1.5rem;
-            color: #444;
-            line-height: 1.5;
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(0,0,0,0.02);
-            border-radius: 15px;
-            border-left: 4px solid {{ texto }};
+            font-family: 'Playfair Display', serif; font-style: italic;
+            font-size: 1.3rem; color: #555;
+            margin: 40px 0; padding: 25px;
+            background: #fdfdfd; border: 1px solid #eee;
+            border-left: 5px solid var(--color-principal);
         }
 
-        .footer {
-            margin-top: 30px;
-            font-weight: 600;
-            color: {{ texto }};
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
+        .firma-linea {
+            margin-top: 60px; border-top: 1px solid #ccc;
+            width: 200px; margin-left: auto; margin-right: auto;
+            padding-top: 10px; font-size: 0.8rem;
+            font-weight: bold; color: #333; text-transform: uppercase;
         }
 
-        /* AJUSTE PARA QUE EL PDF SALGA CON COLOR */
         @media print {
-            body {
-                background-color: {{ fondo }} !important;
-            }
-            .carta-container {
-                box-shadow: none;
-                -webkit-print-color-adjust: exact;
-            }
+            body { background: none !important; }
+            .carta-container { box-shadow: none; border: 2px solid #eee; }
         }
     </style>
 </head>
 <body>
 
     <div class="carta-container">
-        <span class="decoracion">✨</span>
-        <div class="fecha">{{ fecha }}</div>
+        <div class="header-empresa">Diploma de Excelencia Laboral</div>
+        <div class="fecha">Expedido el {{ fecha }}</div>
         
-        <p class="texto-reconocimiento">Se le otorga el presente reconocimiento a:</p>
-        <h1> {{ nombre }}</h1>
-        <p class="dedicatoria">por su gran esfuerzo y dedicación constante.</p>
+        <div class="titulo-reconocimiento">Se otorga con orgullo a:</div>
+        <h1>{{ nombre }}</h1>
+        <div class="puesto">{{ puesto }}</div>
+        
+        <div class="motivo-texto">
+            {{ motivo }}
+        </div>
         
         <div class="frase-box">
             "{{ frase }}"
         </div>
 
-        <div class="footer">
-            — Sigue brillando —
+        <div class="firma-linea">
+            Dirección General<br>
+            <small>{{ empresa }}</small>
         </div>
     </div>
 

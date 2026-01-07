@@ -21,15 +21,20 @@
         td { padding: 15px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         
         .puesto-tag { font-size: 0.75rem; color: #666; display: block; font-style: italic; }
-        .link-ver { color: #007bff; text-decoration: none; font-weight: 600; }
-        .btn-eliminar { color: #d63031; text-decoration: none; font-weight: bold; padding: 5px; }
+        
+        /* Estilos para los botones de acción */
+        .btn-ver { color: #007bff; text-decoration: none; font-weight: 600; margin-right: 15px; border: 1px solid #007bff; padding: 5px 10px; border-radius: 5px; transition: 0.2s; }
+        .btn-ver:hover { background: #007bff; color: white; }
+        
+        .btn-eliminar { color: #d63031; text-decoration: none; font-weight: bold; padding: 5px 10px; border: 1px solid #d63031; border-radius: 5px; transition: 0.2s; }
+        .btn-eliminar:hover { background: #d63031; color: white; }
         
         tr:hover { background-color: #fcfcfc; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1> Panel de Control 📊 <a href="/" class="btn-volver">Regresar al Generador</a> </h1>
+    <h1> Panel de Control  <a href="/" class="btn-volver">Regresar al Generador</a> </h1>
     
     <div class="stats-bar">
         <span>Total de reconocimientos generados:</span>
@@ -55,8 +60,12 @@
                 </td>
                 <td>{{ registro.fecha }}</td>
                 <td>
+                    <a href="/ver_carta/{{ registro.id }}" class="btn-ver" target="_blank">
+                         Ver
+                    </a>
+                    
                     <a href="/eliminar/{{ registro.id }}" class="btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar este registro?')">
-                        🗑️ Borrar
+                         Borrar
                     </a>
                 </td>
             </tr>

@@ -98,5 +98,24 @@ def eliminar(id):
     db.session.commit()
     return redirect('/admin')
 
+@app.route('/ver_carta/<int:id>')
+@requiere_login
+def ver_carta(id):
+
+    registro = Reconocimiento.query.get_or_404(id)
+    
+    
+    datos = {
+        'nombre': registro.nombre,
+        'puesto': registro.puesto,
+        'motivo': registro.motivo,
+        'fecha': registro.fecha,
+        'frase': registro.frase,
+        'estilo': registro.estilo,
+        'fondo': '#ffffff',  # Color por defecto
+        'texto': '#1a2a6c',  # Color por defecto
+        'empresa': "CORPORATIVO BECERRIL S.A."
+    }
+    return render_template('carta_pdf.html', **datos)
 if __name__ == '__main__':
     app.run(debug=True)

@@ -5,7 +5,9 @@ from flask import Flask, render_template, request, make_response, redirect, Resp
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+# Usamos una nueva base de datos para los nuevos campos
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///registro_reconocimientos.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # --- CONFIGURACIÓN DE SEGURIDAD ---
@@ -18,22 +20,22 @@ def requiere_login(f):
         auth = request.authorization
         if not auth or not (auth.username == USUARIO_ADMIN and auth.password == PASSWORD_ADMIN):
             return Response(
-                'Acceso denegado al panel administrativo.', 
+                'Acceso denegado. Use las credenciales correctas.', 
                 401, 
                 {'WWW-Authenticate': 'Basic realm="Login Requerido"'}
             )
         return f(*args, **kwargs)
     return decorated
 
-# --- MODELO DE DATOS ACTUALIZADO ---
+# --- MODELO DE DATOS (NUEVA ESTRUCTURA) ---
 class Reconocimiento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100))
-    puesto = db.Column(db.String(100))   # Nuevo
-    motivo = db.Column(db.Text)          # Nuevo
-    fecha = db.Column(db.String(20))
-    frase = db.Column(db.String(500))
-    estilo = db.Column(db.String(50))    # Nuevo (Moderno, Elegante, etc.)
+    nombre = db.Column(db.String(100), nullable=False)
+    puesto = db.Column(db.String(100), nullable=False)
+    motivo = db.Column(db.Text, nullable=False)
+    fecha = db.Column(db.String(20), nullable=False)
+    frase = db.Column(db.Text, nullable=False)
+    estilo = db.Column(db.String(50), nullable=False)
 
 with app.app_context():
     db.create_all()
@@ -42,8 +44,11 @@ def obtener_frase_aleatoria():
     if os.path.exists('frases.txt'):
         with open('frases.txt', 'r', encoding='utf-8') as f:
             frases = [line.strip() for line in f.readlines() if line.strip()]
-        return random.choice(frases) if frases else "¡Gracias por tu esfuerzo diario!"
-    return "¡Eres una pieza clave en nuestro equipo!"
+        if frases:
+            return random.choice(frases)
+    return "¡Gracias por tu invaluable contribución al equipo!"
+
+# --- RUTAS ---
 
 @app.route('/')
 def inicio():
@@ -51,7 +56,7 @@ def inicio():
 
 @app.route('/generar', methods=['POST'])
 def generar():
-    # Captura de todos los nuevos datos
+    # Recolectamos todos los datos del formulario
     datos = {
         'nombre': request.form.get('nombre'),
         'puesto': request.form.get('puesto'),
@@ -61,19 +66,19 @@ def generar():
         'fondo': request.form.get('color_fondo'),
         'texto': request.form.get('color_texto'),
         'frase': obtener_frase_aleatoria(),
-        'empresa': "Nombre de tu Empresa S.A." # Puedes cambiar esto
+        'empresa': "CORPORATIVO TESCo." 
     }
     
-    # Guardar en la nueva estructura de base de datos
-    nuevo = Reconocimiento(
-        nombre=datos['nombre'], 
+    # Guardamos en la base de datos
+    nuevo_registro = Reconocimiento(
+        nombre=datos['nombre'],
         puesto=datos['puesto'],
         motivo=datos['motivo'],
-        fecha=datos['fecha'], 
+        fecha=datos['fecha'],
         frase=datos['frase'],
         estilo=datos['estilo']
     )
-    db.session.add(nuevo)
+    db.session.add(nuevo_registro)
     db.session.commit()
     
     return render_template('carta_pdf.html', **datos)
@@ -82,16 +87,16 @@ def generar():
 @requiere_login
 def admin():
     registros = Reconocimiento.query.all()
-    total = Reconocimiento.query.count() # Contador automático
+    total = Reconocimiento.query.count() # El contador que pide tu tesis
     return render_template('admin.html', registros=registros, total=total)
 
 @app.route('/eliminar/<int:id>')
 @requiere_login
 def eliminar(id):
-    item = Reconocimiento.query.get_or_404(id)
-    db.session.delete(item)
+    registro_a_borrar = Reconocimiento.query.get_or_404(id)
+    db.session.delete(registro_a_borrar)
     db.session.commit()
     return redirect('/admin')
-    
+
 if __name__ == '__main__':
     app.run(debug=True)

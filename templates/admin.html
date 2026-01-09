@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel de Administración - Recursos Humanos</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
         body { font-family: 'Montserrat', sans-serif; background-color: #f8f9fa; padding: 40px; }
@@ -10,9 +11,21 @@
         h1 { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; color: #333; }
         
         /* Estilo del Contador */
-        .stats-bar { background: #e9ecef; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .stats-bar { background: #e9ecef; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
         .counter-badge { background: #28a745; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
         
+        /* Barra de Meta Mensual */
+        .goal-container { margin-bottom: 30px; background: #fdfdfd; padding: 15px; border-radius: 12px; border: 1px solid #eee; }
+        .progress-bg { background: #e9ecef; border-radius: 20px; height: 12px; width: 100%; overflow: hidden; margin-top: 8px; }
+        .progress-fill { 
+            background: linear-gradient(90deg, #28a745, #85e085); 
+            height: 100%; 
+            border-radius: 20px; 
+            transition: width 1.5s ease-in-out; 
+            width: 0%; /* Inicia en 0 para la animación */
+        }
+        .goal-text { font-size: 0.8rem; color: #555; display: flex; justify-content: space-between; font-weight: 600; }
+
         .btn-volver { font-size: 0.8rem; background: #007bff; color: white; text-decoration: none; padding: 8px 15px; border-radius: 8px; transition: 0.3s; }
         .btn-volver:hover { background: #0056b3; }
         
@@ -22,7 +35,6 @@
         
         .puesto-tag { font-size: 0.75rem; color: #666; display: block; font-style: italic; }
         
-        /* Estilos para los botones de acción */
         .btn-ver { color: #007bff; text-decoration: none; font-weight: 600; margin-right: 15px; border: 1px solid #007bff; padding: 5px 10px; border-radius: 5px; transition: 0.2s; }
         .btn-ver:hover { background: #007bff; color: white; }
         
@@ -34,11 +46,21 @@
 </head>
 <body>
 <div class="container">
-    <h1> Panel de Control  <a href="/" class="btn-volver">Regresar al Generador</a> </h1>
+    <h1> Panel de Control 📊 <a href="/" class="btn-volver">Regresar al Generador</a> </h1>
     
     <div class="stats-bar">
         <span>Total de reconocimientos generados:</span>
         <span class="counter-badge">{{ total }}</span>
+    </div>
+
+    <div class="goal-container">
+        <div class="goal-text">
+            <span>Meta Mensual de Motivación:</span>
+            <span>{{ total }} / 50 Logrado</span>
+        </div>
+        <div class="progress-bg">
+            <div class="progress-fill" id="barra_progreso"></div>
+        </div>
     </div>
 
     <table>
@@ -60,13 +82,8 @@
                 </td>
                 <td>{{ registro.fecha }}</td>
                 <td>
-                    <a href="/ver_carta/{{ registro.id }}" class="btn-ver" target="_blank">
-                         Ver
-                    </a>
-                    
-                    <a href="/eliminar/{{ registro.id }}" class="btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar este registro?')">
-                         Borrar
-                    </a>
+                    <a href="/ver_carta/{{ registro.id }}" class="btn-ver" target="_blank">👁️ Ver</a>
+                    <a href="/eliminar/{{ registro.id }}" class="btn-eliminar" onclick="return confirm('¿Estás seguro de eliminar este registro?')">🗑️ Borrar</a>
                 </td>
             </tr>
             {% else %}
@@ -75,5 +92,29 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    // 1. Animación de la barra al cargar
+    window.onload = function() {
+        const total = {{ total }};
+        const meta = 50;
+        let porcentaje = (total / meta) * 100;
+        if (porcentaje > 100) porcentaje = 100;
+        
+        setTimeout(() => {
+            document.getElementById('barra_progreso').style.width = porcentaje + "%";
+        }, 300);
+
+        // Lanzar un poco de confeti si hay registros, para dar vida al admin
+        if (total > 0) {
+            confetti({
+                particleCount: 80,
+                spread: 50,
+                origin: { y: 0.8 },
+                colors: ['#28a745', '#007bff', '#ffc107']
+            });
+        }
+    };
+</script>
 </body>
 </html>

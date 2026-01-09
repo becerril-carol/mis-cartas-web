@@ -12,6 +12,17 @@
         .row { display: flex; gap: 10px; }
         .btn-submit { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 25px; font-weight: bold; }
         .btn-submit:hover { background: #218838; }
+
+        /* Estilo para la nueva sección de frase */
+        .frase-container { display: flex; gap: 10px; align-items: flex-start; margin-top: 5px; }
+        .btn-refresh { 
+            background: #6c757d; color: white; border: none; padding: 10px; 
+            border-radius: 8px; cursor: pointer; height: 42px; width: 50px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            transition: 0.3s;
+        }
+        .btn-refresh:hover { background: #5a6268; }
+        #frase_display { background: #f8f9fa; font-style: italic; color: #444; border: 1px dashed #ccc; }
     </style>
 </head>
 <body>
@@ -52,9 +63,43 @@
                     <input type="color" name="color_texto" value="#1a2a6c">
                 </div>
             </div>
+
+            <label>Frase Motivacional Sugerida:</label>
+            <div class="frase-container">
+                <textarea id="frase_display" name="frase" readonly required>Cargando frase...</textarea>
+                <button type="button" class="btn-refresh" onclick="cargarNuevaFrase()" title="Cambiar frase">🔄</button>
+            </div>
             
             <button type="submit" class="btn-submit">Generar y Guardar</button>
         </form>
     </div>
+
+    <script>
+        function cargarNuevaFrase() {
+            fetch('/nueva_frase')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('frase_display').value = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('frase_display').value = "¡Gracias por tu gran esfuerzo diario!";
+                });
+        }
+
+        // Carga una frase apenas abre la página
+        window.onload = cargarNuevaFrase;
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', () => {
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    });
+</script>
 </body>
 </html>

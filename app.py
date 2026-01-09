@@ -27,7 +27,7 @@ def requiere_login(f):
         return f(*args, **kwargs)
     return decorated
 
-# --- MODELO DE DATOS (NUEVA ESTRUCTURA) ---
+# --- MODELO DE DATOS ---
 class Reconocimiento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
@@ -54,9 +54,16 @@ def obtener_frase_aleatoria():
 def inicio():
     return render_template('index.html')
 
+@app.route('/nueva_frase')
+def nueva_frase():
+    return obtener_frase_aleatoria()
+
 @app.route('/generar', methods=['POST'])
 def generar():
-    # Recolectamos todos los datos del formulario
+    # Recolectamos la frase del formulario (la que el usuario eligió con el botón refrescar)
+    # Si por algo llega vacía, generamos una nueva
+    frase_elegida = request.form.get('frase') or obtener_frase_aleatoria()
+    
     datos = {
         'nombre': request.form.get('nombre'),
         'puesto': request.form.get('puesto'),
@@ -65,11 +72,10 @@ def generar():
         'estilo': request.form.get('estilo'),
         'fondo': request.form.get('color_fondo'),
         'texto': request.form.get('color_texto'),
-        'frase': obtener_frase_aleatoria(),
+        'frase': frase_elegida,
         'empresa': "CORPORATIVO TESCo." 
     }
     
-    # Guardamos en la base de datos
     nuevo_registro = Reconocimiento(
         nombre=datos['nombre'],
         puesto=datos['puesto'],
@@ -87,7 +93,7 @@ def generar():
 @requiere_login
 def admin():
     registros = Reconocimiento.query.all()
-    total = Reconocimiento.query.count() # El contador que pide tu tesis
+    total = Reconocimiento.query.count()
     return render_template('admin.html', registros=registros, total=total)
 
 @app.route('/eliminar/<int:id>')
@@ -97,18 +103,11 @@ def eliminar(id):
     db.session.delete(registro_a_borrar)
     db.session.commit()
     return redirect('/admin')
-    @app.route('/nueva_frase')
-    
-def nueva_frase():
-    return obtener_frase_aleatoria()
 
 @app.route('/ver_carta/<int:id>')
 @requiere_login
 def ver_carta(id):
-
     registro = Reconocimiento.query.get_or_404(id)
-    
-    
     datos = {
         'nombre': registro.nombre,
         'puesto': registro.puesto,
@@ -116,10 +115,11 @@ def ver_carta(id):
         'fecha': registro.fecha,
         'frase': registro.frase,
         'estilo': registro.estilo,
-        'fondo': '#ffffff',  # Color por defecto
-        'texto': '#1a2a6c',  # Color por defecto
-        'empresa': "CORPORATIVO BECERRIL S.A."
+        'fondo': '#ffffff', 
+        'texto': '#1a2a6c',
+        'empresa': "CORPORATIVO TESCo."
     }
     return render_template('carta_pdf.html', **datos)
+
 if __name__ == '__main__':
     app.run(debug=True)

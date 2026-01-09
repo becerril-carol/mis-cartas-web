@@ -97,6 +97,10 @@ def eliminar(id):
     db.session.delete(registro_a_borrar)
     db.session.commit()
     return redirect('/admin')
+    @app.route('/nueva_frase')
+    
+def nueva_frase():
+    return obtener_frase_aleatoria()
 
 @app.route('/ver_carta/<int:id>')
 @requiere_login
